@@ -1,0 +1,80 @@
+language: cpp
+
+env:
+  - STATIC_LIB=ON
+  - STATIC_LIB=OFF
+
+script:
+  - mkdir build
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DSTATIC_LIB=$STATIC_LIB -DCONAN_PROFILE=$CONAN_PROFILE
+  - cmake --build . --config Release
+  - ctest -C Release
+
+dist: focal
+
+arch: amd64
+
+install:
+  - |-
+      case $TRAVIS_OS_NAME in
+        windows)
+          unset CC
+          unset CC_FOR_BUILD
+          unset CXX
+          unset CXX_FOR_BUILD
+          choco install conan --params="'/AddToPath:1'"
+          choco install visualstudio2019buildtools
+          choco install visualstudio2019-workload-vctools
+          export PATH=$(cmd.exe //c "refreshenv > nul & C:\Progra~1\Git\bin\bash -c 'echo \$PATH' ")
+          export CONAN_PROFILE=default
+          conan profile new default --detect
+          conan profile update "settings.compiler=Visual Studio" default
+          conan profile update settings.compiler.version=16 default          
+          ;;
+        osx)
+          sudo pip3 install conan
+          export CONAN_PROFILE=default
+          ;;
+        linux)
+          sudo pip3 install conan
+          export CONAN_PROFILE=default
+          if [ "$CC" == "clang" ]
+          then 
+            sudo apt -q update
+            sudo apt install clang-10 libc++-10-dev libc++abi-10-dev
+            export CC=clang-10
+            export CXX=clang++-10
+            export CC_FOR_BUILD=clang-10
+            export CXX_FOR_BUILD=clang++-10
+            export CONAN_PROFILE=clang
+            conan profile new clang --detect
+            conan profile update settings.compiler.libcxx=libc++ clang
+          fi
+          ;;
+      esac
+
+compiler:
+  - gcc
+  - clang
+  - cl
+
+os:
+  - linux
+  - osx
+  - windows
+
+osx_image: xcode11.4
+  
+jobs:
+  exclude:
+    - os: windows
+      compiler: gcc
+    - os: windows
+      compiler: clang
+    - os: linux
+      compiler: cl
+    - os: osx
+      compiler: cl
+    - os: osx
+      compiler: gcc
