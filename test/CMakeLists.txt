@@ -12,9 +12,6 @@ endif()
 
 # set_property(TARGET testProg PROPERTY CXX_STANDARD 20)
 
-if(TARGET CONAN_PKG::catch2)
-    target_link_libraries(testProg CONAN_PKG::catch2)
-endif()
 if(TARGET CONAN_PKG::glm)
     target_link_libraries(testProg CONAN_PKG::glm)
 endif()
@@ -24,14 +21,23 @@ endif()
 if(TARGET CONAN_PKG::glew)
     target_link_libraries(testProg CONAN_PKG::glew)
 endif()
+if(TARGET CONAN_PKG::catch2)
+    target_link_libraries(testProg CONAN_PKG::catch2)
+endif()
 
 target_link_libraries(testProg libGLShaderPP)
 
-# copy dataset files
+# copy shader files
 file(GLOB shaderFiles "shaders/*.*")
 add_custom_command(TARGET testProg POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
                        ${shaderFiles}
+                           $<TARGET_FILE_DIR:testProg>)
+# copy dataset files
+file(GLOB datasetFiles "dataset/*.*")
+add_custom_command(TARGET testProg POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+                       ${datasetFiles}
                            $<TARGET_FILE_DIR:testProg>)
 # copy dynamic linked library
 if(NOT STATIC_LIB)
@@ -43,4 +49,4 @@ endif()
 
 set_property(TARGET testProg PROPERTY VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
 
-# add_test(NAME Reading_basi0g01.png COMMAND testProg [basi0g01] WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
+add_test(NAME shader COMMAND testProg [shader] WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)

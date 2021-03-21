@@ -9,6 +9,41 @@
 #include <string>
 #include <istream>
 
+#ifndef EXPORT
+
+#if defined(_MSC_VER)
+ //  Microsoft 
+#ifdef GLSHADERPP_STATIC
+#define EXPORT
+#define IMPORT
+#else
+#define EXPORT __declspec(dllexport)
+#define IMPORT __declspec(dllimport)
+#endif // _LIB
+#elif defined(__GNUC__)
+ //  GCC
+#define EXPORT __attribute__((visibility("default")))
+#define IMPORT
+#else
+ //  do nothing and hope for the best?
+#define EXPORT
+#define IMPORT
+#pragma warning Unknown dynamic link import/export semantics.
+#endif
+
+#endif
+
+#ifndef GLSHADERPP_API
+
+#ifdef GLShaderPP_EXPORTS
+#define GLSHADERPP_API EXPORT
+#else
+#define GLSHADERPP_API IMPORT
+#endif
+
+#endif // !GLSHADERPP_API
+
+
 /*!
  * \brief Classe de chargement et compilation d'un shader
  *
@@ -18,7 +53,7 @@
  * devez définir la macro _DONT_USE_SHADER_EXCEPTION préalablement à l'inclusion du fichier 
  * CShader.h
  */
-class CShader
+class GLSHADERPP_API CShader
 {
 public:
   enum ShaderCompileState

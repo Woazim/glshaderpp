@@ -2,17 +2,17 @@
 #include <stdexcept>
 #include <string>
 
-
 class CShaderException :
   public std::exception
 {
 public:
-  enum ExceptionType
+  enum class ExceptionType
   {
-    TypeBadSourceStream,
-    TypeCompilationError,
-    TypePrepareLinkError,
-    TypeLinkError
+    BadSourceStream,
+    CompilationError,
+    PrepareLinkError,
+    LinkError,
+    GlewInit
   };
 private:
   ExceptionType m_eType;

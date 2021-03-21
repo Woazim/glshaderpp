@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.h"
 
-class CShaderProgram
+class GLSHADERPP_API CShaderProgram
 {
 public:
   enum LinkingStatus

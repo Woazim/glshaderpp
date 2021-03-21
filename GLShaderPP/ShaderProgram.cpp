@@ -17,7 +17,7 @@ void CShaderProgram::AttachShader(const CShader& s)
     string what{ "Le " + s.GetType() + " shader n'est pas compilé avant d'être attaché au programme" };
     cerr << what << endl;
 #ifndef _DONT_USE_SHADER_EXCEPTION
-    throw CShaderException("Le shader n'est pas compilé avant d'être attaché au programme", CShaderException::TypePrepareLinkError);
+    throw CShaderException("Le shader n'est pas compilé avant d'être attaché au programme", CShaderException::ExceptionType::PrepareLinkError);
 #endif
   }
   else
@@ -108,7 +108,7 @@ void CShaderProgram::VerifLinking()
     string what{ "Erreur lors de l'édition des liens du programme shader\n" + infologbuffer };
     cerr << what << endl;
 #ifndef _DONT_USE_SHADER_EXCEPTION
-    throw CShaderException(what, CShaderException::TypeLinkError);
+    throw CShaderException(what, CShaderException::ExceptionType::LinkError);
 #endif
   }
 }

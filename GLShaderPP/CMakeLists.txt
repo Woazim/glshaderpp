@@ -4,7 +4,7 @@ project("libGLShaderPP")
 
 if(STATIC_LIB)
     add_library (libGLShaderPP STATIC)
-    add_compile_definitions(IMAGL_STATIC)
+    add_compile_definitions(GLSHADERPP_STATIC)
 else()
     add_library (libGLShaderPP SHARED)
 endif()

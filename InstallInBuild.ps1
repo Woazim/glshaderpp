@@ -102,7 +102,8 @@ $Configs | ForEach-Object {
                 wsl cmake ../.. "-DCMAKE_BUILD_TYPE=$($_.Config)" "-DBUILD_DOCUMENTATION=$doc" "-DBUILD_TESTING=ON" "-DSTATIC_LIB=$Static" "-DSUPPORT_PNG=ON" "-DCMAKE_C_COMPILER=$CurrentCCompiler" "-DCMAKE_CXX_COMPILER=$CurrentCXXCompiler" "-DCONAN_PROFILE=$ConanProfile"
                 wsl cmake --build . --config $_.Config
                 wsl cmake --install . --prefix "../install/WSL/$($_.Compiler)"
-                wsl ctest -C $_.Config
+                wsl -u root which Xvfb '||' apt-get -y install xvfb 
+                wsl Xvfb :5 -screen 0 800x600x24 '&' 'XVFBPID=$!' '&&' export DISPLAY=:5 '&&' ctest -C $_.Config '&&' kill '$XVFBPID' '&&' unset XVFBPID
                 Pop-Location
             }
         } else { #Platform is x64 (so compiler is msvc)

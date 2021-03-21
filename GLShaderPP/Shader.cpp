@@ -5,15 +5,34 @@
 
 using namespace std;
 
+class CGlewInit {
+  static bool m_bGlewInit;
+public:
+  CGlewInit() { 
+    if (!m_bGlewInit)
+    {
+      glewExperimental = GL_TRUE;
+      GLenum err;
+      if ((err = ::glewInit()) != GLEW_OK)    /* Problem: glewInit failed, something is seriously wrong. */
+        throw CShaderException(std::string("Error: ") + (char*)glewGetErrorString(err), CShaderException::ExceptionType::GlewInit);
+      m_bGlewInit = true;
+    }
+  }
+};
+
+bool CGlewInit::m_bGlewInit = false;
+
 CShader::CShader(GLenum eShaderType)
   : m_eCompileState(notCompiled)
 {
+  CGlewInit();
   m_nShaderId = glCreateShader(eShaderType);
 }
 
 CShader::CShader(GLenum eShaderType, const string& strSource)
   : m_eCompileState(notCompiled)
 {
+  CGlewInit();
   m_nShaderId = glCreateShader(eShaderType);
   SetSource(strSource);
   Compile();
@@ -22,6 +41,7 @@ CShader::CShader(GLenum eShaderType, const string& strSource)
 CShader::CShader(GLenum eShaderType, const istream& streamSource)
   : m_eCompileState(notCompiled)
 {
+  CGlewInit();
   m_nShaderId = glCreateShader(eShaderType);
   SetSource(streamSource);
   Compile();
@@ -55,7 +75,7 @@ void CShader::SetSource(const istream& streamSource)
     string what{ "Impossible d'ouvrir les sources du " + GetType() + " shader"};
     cerr << what << endl;
 #ifndef _DONT_USE_SHADER_EXCEPTION
-    throw CShaderException(what, CShaderException::TypeBadSourceStream);
+    throw CShaderException(what, CShaderException::ExceptionType::BadSourceStream);
 #endif
   }
 }
@@ -82,7 +102,7 @@ void CShader::Compile()
     string what{ "Erreur de compilation du " + GetType() + " shader\n" + infologbuffer };
     cerr << what << endl;
 #ifndef _DONT_USE_SHADER_EXCEPTION
-    throw CShaderException(what, CShaderException::TypeCompilationError);
+    throw CShaderException(what, CShaderException::ExceptionType::CompilationError);
 #endif
   }
 }
