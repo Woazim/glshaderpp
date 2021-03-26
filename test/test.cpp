@@ -90,12 +90,12 @@ TEST_CASE("Create a typical GLSL program", "[shader]")
   }
   INFO(strGLDriverInfo);
 
-  CShaderProgram program{ 
-    CShader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } },
-    CShader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } }
+  GLShaderPP::CShaderProgram program{ 
+    GLShaderPP::CShader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } },
+    GLShaderPP::CShader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } }
   };
 
-  REQUIRE(program.GetLinkingStatus() == CShaderProgram::linkingOk);
+  REQUIRE(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::linkingOk);
   program.Use();
 
   GLfloat vertices[] = {
@@ -133,28 +133,6 @@ TEST_CASE("Create a typical GLSL program", "[shader]")
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   //Atache le render buffer au framebuffer actif
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
-
-  //Not usefull to go throug a texture since there is glReadPixels
-  ////Create a texture for its color buffer
-  //GLuint texColorBuffer;
-  //glGenTextures(1, &texColorBuffer);
-  //glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nWndWidth, nWndHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  //glBindTexture(GL_TEXTURE_2D, 0);
-  ////Attach this texture to the offscreen FBO
-  //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
-
-  //Not usefull since we don't use depth-buffer
-  ////Create a render buffer object for depth buffer
-  //GLuint rbo;
-  //glGenRenderbuffers(1, &rbo);
-  //glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-  //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, nWndWidth, nWndHeight);
-  //glBindRenderbuffer(GL_RENDERBUFFER, 0);
-  ////Atache le render buffer au framebuffer actif
-  //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
   REQUIRE(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
