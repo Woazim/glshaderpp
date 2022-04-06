@@ -5,32 +5,17 @@
 
 namespace GLShaderPP {
 
-  class CGlewInit {
-    static bool m_bGlewInit;
-  public:
-    CGlewInit() {
-      if (!m_bGlewInit)
-      {
-        glewExperimental = GL_TRUE;
-        GLenum err;
-        if ((err = ::glewInit()) != GLEW_OK)    /* Problem: glewInit failed, something is seriously wrong. */
-          throw CShaderException(std::string("Error: ") + (char*)glewGetErrorString(err), CShaderException::ExceptionType::GlewInit);
-        m_bGlewInit = true;
-      }
-    }
-  };
-
-  bool CGlewInit::m_bGlewInit = false;
-
   CShader::CShader(GLenum eShaderType)
   {
-    CGlewInit();
+    if (!glCreateShader)
+      GlewInit();
     m_nShaderId = glCreateShader(eShaderType);
   }
 
   CShader::CShader(GLenum eShaderType, const std::string& strSource)
   {
-    CGlewInit();
+    if (!glCreateShader)
+      GlewInit();
     m_nShaderId = glCreateShader(eShaderType);
     SetSource(strSource);
     Compile();
@@ -38,7 +23,8 @@ namespace GLShaderPP {
 
   CShader::CShader(GLenum eShaderType, const std::istream& streamSource)
   {
-    CGlewInit();
+    if (!glCreateShader)
+      GlewInit();
     m_nShaderId = glCreateShader(eShaderType);
     SetSource(streamSource);
     Compile();

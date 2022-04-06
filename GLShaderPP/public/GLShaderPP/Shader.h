@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <istream>
+#include "ShaderException.h"
 
 #ifndef EXPORT
 
@@ -44,6 +45,13 @@
 #endif // !GLSHADERPP_API
 
 namespace GLShaderPP {
+
+  inline void GlewInit() {
+    glewExperimental = GL_TRUE;
+    GLenum err;
+    if ((err = ::glewInit()) != GLEW_OK)    /* Problem: glewInit failed, something is seriously wrong. */
+      throw CShaderException(std::string("Error: ") + (char*)glewGetErrorString(err), CShaderException::ExceptionType::GlewInit);
+  };
 
   /*!
    * \brief Classe de chargement et compilation d'un shader

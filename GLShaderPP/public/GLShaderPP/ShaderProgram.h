@@ -52,6 +52,8 @@ namespace GLShaderPP {
   template<Shader... S>
   CShaderProgram::CShaderProgram(const S&... shaders)
   {
+    if (!glCreateProgram)
+      GlewInit();
     m_nProgram = glCreateProgram();
     ((*this) << ... << shaders);
     Link();

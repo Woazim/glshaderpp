@@ -9,15 +9,17 @@ else()
     add_library (libGLShaderPP SHARED)
 endif()
 set_property(TARGET libGLShaderPP PROPERTY OUTPUT_NAME GLShaderPP)
-set_property(TARGET libGLShaderPP PROPERTY PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/public/GLShaderPP/ShaderProgram.h")
+set_property(TARGET libGLShaderPP PROPERTY PUBLIC_HEADER 
+    "${CMAKE_CURRENT_SOURCE_DIR}/public/GLShaderPP/ShaderProgram.h" 
+    "${CMAKE_CURRENT_SOURCE_DIR}/public/GLShaderPP/Shader.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/public/GLShaderPP/ShaderException.h")
 target_include_directories(libGLShaderPP INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/public")
 
 if(TARGET CONAN_PKG::glew)
     target_link_libraries (libGLShaderPP CONAN_PKG::glew)
 endif()
 
-file(GLOB_RECURSE GLShaderPP_SRC "*.h" "*.cpp")
-target_sources(libGLShaderPP PRIVATE ${GLShaderPP_SRC})
+target_sources(libGLShaderPP PRIVATE Shader.cpp ShaderProgram.cpp)
 
 add_compile_definitions(GLShaderPP_EXPORTS)
 

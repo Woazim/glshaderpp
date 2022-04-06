@@ -7,6 +7,8 @@ namespace GLShaderPP {
 
   CShaderProgram::CShaderProgram()
   {
+    if (!glCreateProgram)
+      GlewInit();
     m_nProgram = glCreateProgram();
   }
 
