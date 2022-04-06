@@ -120,6 +120,11 @@
           "name": "BUILD_DOCUMENTATION",
           "value": "True",
           "type": "BOOL"
+        },
+        {
+          "name": "CONAN_PROFILE",
+          "value": "gcc",
+          "type": "STRING"
         }
       ]
     },
@@ -141,6 +146,11 @@
           "name": "BUILD_TESTING",
           "value": "True",
           "type": "BOOL"
+        },
+        {
+          "name": "CONAN_PROFILE",
+          "value": "gcc",
+          "type": "STRING"
         }
       ]
     },
@@ -165,6 +175,11 @@
           "name": "STATIC_LIB",
           "value": "True",
           "type": "BOOL"
+        },
+        {
+          "name": "CONAN_PROFILE",
+          "value": "gcc",
+          "type": "STRING"
         }
       ],
       "wslPath": "${defaultWSLPath}",
@@ -191,6 +206,11 @@
           "name": "STATIC_LIB",
           "value": "True",
           "type": "BOOL"
+        },
+        {
+          "name": "CONAN_PROFILE",
+          "value": "gcc",
+          "type": "STRING"
         }
       ],
       "wslPath": "${defaultWSLPath}",
@@ -309,166 +329,6 @@
       ],
       "wslPath": "${defaultWSLPath}",
       "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    },
-    {
-      "name": "x64-Debug-Dynamic-v14.22",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "environments": [
-        {
-          "INCLUDE": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt",
-          "LIB": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64",
-          "LIBPATH": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319",
-          "PATH": "${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.PATH}",
-          "VCToolsInstallDir": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\",
-          "VCToolsVersion": "14.22.27905",
-          "VSCMD_ARG_VCVARS_VER": "14.22"
-        }
-      ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "False",
-          "type": "BOOL"
-        },
-        {
-          "name": "BUILD_DOCUMENTATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "intelliSenseMode": "windows-msvc-x64"
-    },
-    {
-      "name": "x64-Debug-Static-v14.22",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "environments": [
-        {
-          "INCLUDE": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt",
-          "LIB": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64",
-          "LIBPATH": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319",
-          "PATH": "${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.PATH}",
-          "VCToolsInstallDir": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\",
-          "VCToolsVersion": "14.22.27905",
-          "VSCMD_ARG_VCVARS_VER": "14.22"
-        }
-      ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "BUILD_DOCUMENTATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "intelliSenseMode": "windows-msvc-x64"
-    },
-    {
-      "name": "x64-Release-Dynamic-v14.22",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "environments": [
-        {
-          "INCLUDE": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt",
-          "LIB": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64",
-          "LIBPATH": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319",
-          "PATH": "${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.PATH}",
-          "VCToolsInstallDir": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\",
-          "VCToolsVersion": "14.22.27905",
-          "VSCMD_ARG_VCVARS_VER": "14.22"
-        }
-      ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "False",
-          "type": "BOOL"
-        },
-        {
-          "name": "BUILD_DOCUMENTATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "intelliSenseMode": "windows-msvc-x64"
-    },
-    {
-      "name": "x64-Release-Static-v14.22",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "environments": [
-        {
-          "INCLUDE": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\include;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\include\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\ucrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\shared;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\um;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\winrt;${env.WindowsSdkDir}include\\${env.WindowsSDKVersion}\\cppwinrt",
-          "LIB": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\lib\\um\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\ucrt\\x64;${env.WindowsSdkDir}lib\\${env.WindowsSDKVersion}\\um\\x64",
-          "LIBPATH": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x64;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\lib\\x86\\store\\references;${env.WindowsSdkDir}UnionMetadata\\10.0.18362.0;${env.WindowsSdkDir}References\\10.0.18362.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319",
-          "PATH": "${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.VSINSTALLDIR}Common7\\IDE\\\\Extensions\\Microsoft\\IntelliCode\\CLI;${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\bin\\HostX64\\x64;${env.VCIDEInstallDir}VCPackages;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;${env.VSINSTALLDIR}MSBuild\\Current\\bin\\Roslyn;${env.VSINSTALLDIR}Team Tools\\Performance Tools\\x64;${env.VSINSTALLDIR}Team Tools\\Performance Tools;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Common\\VSPerfCollectionTools\\vs2019\\;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;${env.VSINSTALLDIR}Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\;${env.WindowsSdkBinPath}${env.WindowsSDKVersion}\\x64;${env.WindowsSdkBinPath}x64;${env.VSINSTALLDIR}\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;${env.VSINSTALLDIR}Common7\\IDE\\;${env.VS160COMNTOOLS};${env.PATH}",
-          "VCToolsInstallDir": "${env.VCINSTALLDIR}Tools\\MSVC\\14.22.27905\\",
-          "VCToolsVersion": "14.22.27905",
-          "VSCMD_ARG_VCVARS_VER": "14.22"
-        }
-      ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "BUILD_DOCUMENTATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "intelliSenseMode": "windows-msvc-x64"
     }
   ]
 }

@@ -57,14 +57,14 @@ namespace GLShaderPP {
   class GLSHADERPP_API CShader
   {
   public:
-    enum ShaderCompileState
+    enum class ShaderCompileState
     {
       notCompiled,
       compileError,
       compileOk
     };
   private:
-    ShaderCompileState m_eCompileState;
+    ShaderCompileState m_eCompileState = ShaderCompileState::notCompiled;
     GLuint m_nShaderId;
 
     //rend cette classe non copiable

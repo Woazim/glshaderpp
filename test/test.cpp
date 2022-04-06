@@ -9,7 +9,10 @@
 #include <fstream>
 #include <sstream>
 #include <GLShaderPP/ShaderProgram.h>
+#include <GLShaderPP/ShaderException.h>
 #include <catch2/catch.hpp>
+
+using namespace std::string_literals;
 
 constexpr float pi = 3.1415926535897932384626433832795f;
 
@@ -19,6 +22,27 @@ constexpr float pi = 3.1415926535897932384626433832795f;
 extern "C" _declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 #endif
 
+
+struct AreSimilarShaderExceptionMatcher : Catch::MatcherBase<GLShaderPP::CShaderException>
+{
+  GLShaderPP::CShaderException m_shaderException;
+public:
+  AreSimilarShaderExceptionMatcher(const GLShaderPP::CShaderException& e) : m_shaderException{ e } {}
+
+  bool match(const GLShaderPP::CShaderException& e) const override {
+    return e.type() == m_shaderException.type();
+  }
+
+  std::string describe() const override {
+    return "CShaderException are of the same type"s;
+  }
+};
+
+AreSimilarShaderExceptionMatcher AreSimilarShaderException(const GLShaderPP::CShaderException& e) {
+  return { e };
+}
+
+
 const char* GetGLErrorString();
 void error_callback(int error, const char* description)
 {
@@ -26,11 +50,9 @@ void error_callback(int error, const char* description)
   REQUIRE(false);
 }
 
-TEST_CASE("Create a typical GLSL program", "[shader]")
+std::string initWindow(const int nWndWidth, const int nWndHeight)
 {
   const char* pText;
-  constexpr int nWndWidth = 800;
-  constexpr int nWndHeight = 600;
 
   glfwSetErrorCallback(error_callback);
   REQUIRE(glfwInit() == GLFW_TRUE);
@@ -88,16 +110,11 @@ TEST_CASE("Create a typical GLSL program", "[shader]")
     INFO(strGLDriverInfo);
     CHECK(everythingAllright);
   }
-  INFO(strGLDriverInfo);
+  return strGLDriverInfo;
+}
 
-  GLShaderPP::CShaderProgram program{ 
-    GLShaderPP::CShader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } },
-    GLShaderPP::CShader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } }
-  };
-
-  REQUIRE(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::linkingOk);
-  program.Use();
-
+void testTriangle(const int nWndWidth, const int nWndHeight)
+{
   GLfloat vertices[] = {
     //Positions        //Colors       
     -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   //Vertex 1
@@ -204,9 +221,309 @@ TEST_CASE("Create a typical GLSL program", "[shader]")
     }
   }
 
+}
+
+TEST_CASE("Create a typical GLSL program from files at construction of CShaderProgram", "[direct-shader-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShaderProgram program{
+    GLShaderPP::CShader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } },
+    GLShaderPP::CShader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } }
+  };
+
+  REQUIRE(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::LinkingStatus::linkingOk);
+  program.Use();
+
+  testTriangle(nWndWidth, nWndHeight);
+
   glfwTerminate();
 }
 
+TEST_CASE("Create a typical GLSL program from files after construction of CShaderProgram", "[shader-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShaderProgram program;
+  CHECK(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::LinkingStatus::notLinked);
+
+  program.AttachShader(GLShaderPP::CShader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } });
+  program.AttachShader(GLShaderPP::CShader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } });
+  CHECK(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::LinkingStatus::notLinked);
+
+  program.Link();
+  REQUIRE(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::LinkingStatus::linkingOk);
+  program.Use();
+
+  testTriangle(nWndWidth, nWndHeight);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a typical GLSL program from strings at construction of CShaderProgram", "[direct-shader-from-strings]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  std::stringstream vertexShaderStream;
+  vertexShaderStream << std::ifstream{ "vertex.vert" }.rdbuf();
+  std::stringstream fragmentShaderStream;
+  fragmentShaderStream << std::ifstream{ "fragment.frag" }.rdbuf();
+
+  GLShaderPP::CShaderProgram program{
+    GLShaderPP::CShader{ GL_VERTEX_SHADER, vertexShaderStream.str() },
+    GLShaderPP::CShader{ GL_FRAGMENT_SHADER, fragmentShaderStream.str() }
+  };
+
+  REQUIRE(program.GetLinkingStatus() == GLShaderPP::CShaderProgram::LinkingStatus::linkingOk);
+  program.Use();
+
+  testTriangle(nWndWidth, nWndHeight);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a vertex shader from files at construction of CShader", "[direct-vertex-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader shader{ GL_VERTEX_SHADER, std::ifstream{ "vertex.vert" } };
+
+  CHECK(shader.GetType() == "vertex");
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::compileOk);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a fragment shader from files at construction of CShader", "[direct-fragment-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader shader{ GL_FRAGMENT_SHADER, std::ifstream{ "fragment.frag" } };
+
+  CHECK(shader.GetType() == "fragment");
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::compileOk);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a vertex shader from files after construction of CShader", "[vertex-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader shader{ GL_VERTEX_SHADER };
+  CHECK(shader.GetType() == "vertex");
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::notCompiled);
+
+  shader.SetSource(std::ifstream{ "vertex.vert" });
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::notCompiled);
+
+  shader.Compile();
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::compileOk);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a fragment shader from files after construction of CShader", "[fragment-from-files]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader shader{ GL_FRAGMENT_SHADER };
+  CHECK(shader.GetType() == "fragment");
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::notCompiled);
+
+  shader.SetSource(std::ifstream{ "fragment.frag" });
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::notCompiled);
+
+  shader.Compile();
+  CHECK(shader.GetCompileState() == GLShaderPP::CShader::ShaderCompileState::compileOk);
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a non compilable vertex shader at construction of CShader", "[direct-faulty-vertex]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  CHECK_THROWS_MATCHES(
+    std::make_unique<GLShaderPP::CShader>(GL_VERTEX_SHADER, "This shader won't compile"s),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::CompilationError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a non compilable vertex shader after construction of CShader", "[faulty-vertex]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader shader{ GL_VERTEX_SHADER };
+  shader.SetSource("This shader won't compile"s);
+  CHECK_THROWS_MATCHES(
+    shader.Compile(),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::CompilationError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a non linkable program shader at construction of CShaderProgram", "[direct-notready-program]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader vertex{ GL_VERTEX_SHADER };
+  CHECK_THROWS_MATCHES(
+    std::make_unique<GLShaderPP::CShaderProgram>(vertex),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::PrepareLinkError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a non linkable program shader after construction of CShaderProgram", "[notready-program]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShaderProgram program;
+  GLShaderPP::CShader vertex{ GL_VERTEX_SHADER };
+  CHECK_THROWS_MATCHES(
+    program.AttachShader(vertex),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::PrepareLinkError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a faulty program shader at construction of CShaderProgram", "[direct-faulty-program]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader vertex1{ GL_VERTEX_SHADER, R"SHADER(#version 330 core
+void main()
+{
+  gl_Position = vec4(1.0f);
+}
+)SHADER" };
+  GLShaderPP::CShader vertex2{ GL_VERTEX_SHADER, R"SHADER(#version 330 core
+void main()
+{
+  gl_Position = vec4(1.0f);
+}
+)SHADER" };
+  
+  //This will fails since there are two main functions in vertex shader
+  CHECK_THROWS_MATCHES(
+    std::make_unique<GLShaderPP::CShaderProgram>(vertex1, vertex2),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::LinkError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Create a faulty program shader after construction of CShaderProgram", "[faulty-program]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShaderProgram program;
+  GLShaderPP::CShader vertex1{ GL_VERTEX_SHADER, R"SHADER(#version 330 core
+void main()
+{
+  gl_Position = vec4(1.0f);
+}
+)SHADER" };
+  GLShaderPP::CShader vertex2{ GL_VERTEX_SHADER, R"SHADER(#version 330 core
+void main()
+{
+  gl_Position = vec4(1.0f);
+}
+)SHADER" };
+
+  program.AttachShader(vertex1);
+  program.AttachShader(vertex2);
+
+  //This will fails since there are two main functions in vertex shader
+  CHECK_THROWS_MATCHES(
+    program.Link(),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::LinkError))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Try to read source from a bad stream", "[bad-source-stream]")
+{
+  constexpr int nWndWidth = 800;
+  constexpr int nWndHeight = 600;
+
+  INFO(initWindow(nWndWidth, nWndHeight));
+
+  GLShaderPP::CShader vertex{ GL_VERTEX_SHADER };
+
+  //This will fails since there are two main functions in vertex shader
+  CHECK_THROWS_MATCHES(
+    vertex.SetSource(std::ifstream("This file should not exists", std::ios_base::in)),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::BadSourceStream))
+  );
+
+  glfwTerminate();
+}
+
+TEST_CASE("Try to create a shader object without having called glewInit", "[no-glewinit]")
+{
+  //This will fails since there are two main functions in vertex shader
+  CHECK_THROWS_MATCHES(
+    std::make_unique<GLShaderPP::CShader>(GL_VERTEX_SHADER),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::GlewInit))
+  );
+
+  glfwTerminate();
+}
 
 const char* GetGLErrorString()
 {

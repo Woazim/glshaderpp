@@ -1,19 +1,29 @@
 #pragma once
 #include "Shader.h"
+#ifdef __cpp_lib_concepts
+#include <concepts>
+#endif
 
 namespace GLShaderPP {
+
+#ifdef __cpp_lib_concepts
+  template<typename T>
+  concept Shader = std::derived_from<T, CShader>;
+#else
+#define Shader class
+#endif
 
   class GLSHADERPP_API CShaderProgram
   {
   public:
-    enum LinkingStatus
+    enum class LinkingStatus
     {
       notLinked,
       linkingError,
       linkingOk
     };
   private:
-    LinkingStatus m_eLinkingStatus;
+    LinkingStatus m_eLinkingStatus = LinkingStatus::notLinked;
     GLuint m_nProgram;
 
     //rend cette classe non copiable
@@ -21,11 +31,9 @@ namespace GLShaderPP {
     CShaderProgram& operator=(const CShaderProgram&) = delete;
 
   public:
-    CShaderProgram(const CShader& s1, const CShader& s2, const CShader& s3, const CShader& s4, const CShader& s5);
-    CShaderProgram(const CShader& s1, const CShader& s2, const CShader& s3, const CShader& s4);
-    CShaderProgram(const CShader& s1, const CShader& s2, const CShader& s3);
-    CShaderProgram(const CShader& s1, const CShader& s2);
-    CShaderProgram(const CShader& s1);
+    template<Shader... S>
+    CShaderProgram(const S&... shaders);
+
     CShaderProgram();
     ~CShaderProgram();
 
@@ -33,6 +41,7 @@ namespace GLShaderPP {
     GLuint GetProgramId() const { return m_nProgram; }
     void Use() { glUseProgram(m_nProgram); }
     void AttachShader(const CShader& s);
+    CShaderProgram& operator<<(const CShader& s) { AttachShader(s); return *this; }
     void Link();
 
   private:
@@ -40,4 +49,11 @@ namespace GLShaderPP {
 
   };
 
+  template<Shader... S>
+  CShaderProgram::CShaderProgram(const S&... shaders)
+  {
+    m_nProgram = glCreateProgram();
+    ((*this) << ... << shaders);
+    Link();
+  }
 }
