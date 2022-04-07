@@ -83,7 +83,7 @@ docker-test:
       tag=":$CI_COMMIT_REF_SLUG"
       echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
     fi
-  - docker run --rm -ti -w /home/conan/glshaderPP/build "$CI_REGISTRY_IMAGE${tag}" bash -c "sudo Xvfb& export DISPLAY=:0 && ctest"
+  - docker run --rm -w /home/conan/glshaderPP/build "$CI_REGISTRY_IMAGE${tag}" bash -c "sudo Xvfb& export DISPLAY=:0 && ctest"
 cleanup:
   image: docker:latest
   variables:
