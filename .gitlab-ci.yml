@@ -1,0 +1,110 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+variables:
+  GIT_SSL_NO_VERIFY: '1'
+  GIT_SUBMODULE_STRATEGY: recursive
+stages:
+- build
+- deploy
+- test
+- review
+- dast
+- staging
+- canary
+- production
+- incremental rollout 10%
+- incremental rollout 25%
+- incremental rollout 50%
+- incremental rollout 100%
+- performance
+- cleanup
+docker-build:
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+  cache:
+    key:
+      files:
+      - conanfile.in
+    paths:
+    - ".conan"
+    when: always
+  artifacts:
+    paths:
+    - install
+    - build
+  stage: build
+  services:
+  - docker:dind
+  script:
+  - |
+    if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+      tag=""
+      echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
+    else
+      tag=":$CI_COMMIT_REF_SLUG"
+      echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
+    fi
+  - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
+  - docker create --name glshaderpp_container "$CI_REGISTRY_IMAGE${tag}"
+  - docker cp glshaderpp_container:/home/conan/.conan ./.conan
+  - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
+  - docker cp glshaderpp_container:/home/conan/glshaderPP/build ./build
+  - docker container rm glshaderpp_container
+#To be put in cleanup stage
+#  - docker image rm "$CI_REGISTRY_IMAGE${tag}"
+  rules:
+  - if: "$CI_COMMIT_BRANCH"
+    exists:
+    - Dockerfile
+docker-test:
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    GIT_STRATEGY: none
+  stage: test
+  services:
+  - docker:dind
+  script:
+  - |
+    if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+      tag=""
+      echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
+    else
+      tag=":$CI_COMMIT_REF_SLUG"
+      echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
+    fi
+  - docker run --rm -ti -w /home/conan/glshaderPP/build "$CI_REGISTRY_IMAGE${tag}" bash -c "sudo Xvfb& export DISPLAY=:0 && ctest"
+cleanup:
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    GIT_STRATEGY: none
+  stage: cleanup
+  services:
+  - docker:dind
+  script:
+  - |
+    if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+      tag=""
+      echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
+    else
+      tag=":$CI_COMMIT_REF_SLUG"
+      echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
+    fi
+  - docker image rm "$CI_REGISTRY_IMAGE${tag}"
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
