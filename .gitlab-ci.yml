@@ -57,7 +57,7 @@ docker-build:
   - docker pull $CI_REGISTRY_IMAGE${tag} || true
   - docker build --pull --cache-from $CI_REGISTRY_IMAGE${tag} --tag $CI_REGISTRY_IMAGE${tag} .
   - docker create --name glshaderpp_container "$CI_REGISTRY_IMAGE${tag}"
-  - docker cp glshaderpp_container:/home/conan/.conan ./.conan
+  - docker cp glshaderpp_container:/root/.conan ./.conan
   - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
   - docker cp glshaderpp_container:/home/conan/glshaderPP/build ./build
   - docker container rm glshaderpp_container

@@ -39,7 +39,7 @@ RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TES
 FROM ubuntu:latest as tester
 
 COPY --from=builder /home/conan/glshaderPP /home/conan/glshaderPP
-COPY --from=builder /home/conan/.conan /home/conan/glshaderPP/.conan
+COPY --from=builder /home/conan/.conan /root/.conan
 WORKDIR /home/conan/glshaderPP
 
 RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
