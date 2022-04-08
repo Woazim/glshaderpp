@@ -58,8 +58,6 @@ docker-build:
   - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
   - docker cp glshaderpp_container:/home/conan/glshaderPP/build ./build
   - docker container rm glshaderpp_container
-#To be put in cleanup stage
-#  - docker image rm "$CI_REGISTRY_IMAGE${tag}"
   rules:
   - if: "$CI_COMMIT_BRANCH"
     exists:
@@ -72,8 +70,6 @@ docker-test:
     DOCKER_TLS_CERTDIR: ''
     GIT_STRATEGY: none
   stage: test
-  services:
-  - docker:dind
   script:
   - |
     if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
@@ -83,27 +79,7 @@ docker-test:
       tag=":$CI_COMMIT_REF_SLUG"
       echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
     fi
-  - docker run --rm -ti -w /home/conan/glshaderPP/build "$CI_REGISTRY_IMAGE${tag}" bash -c "sudo Xvfb& export DISPLAY=:0 && ctest"
-cleanup:
-  image: docker:latest
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ''
-    GIT_STRATEGY: none
-  stage: cleanup
-  services:
-  - docker:dind
-  script:
-  - |
-    if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
-      tag=""
-      echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
-    else
-      tag=":$CI_COMMIT_REF_SLUG"
-      echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
-    fi
-  - docker image rm "$CI_REGISTRY_IMAGE${tag}"
+  - sudo Xvfb& export DISPLAY=:0 && ctest
 sast:
   stage: test
 include:
