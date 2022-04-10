@@ -1,6 +1,6 @@
 /*!
  * \file Shader.h
- * Ce fichier contient la déclaration de la classe CShader
+ * Ce fichier contient la dÃ©claration de la classe CShader
  * 
  * Copyright (c) 2015 by Benjamin ALBOUY-KISSI
  */
@@ -57,9 +57,9 @@ namespace GLShaderPP {
    * \brief Classe de chargement et compilation d'un shader
    *
    * Cette classe permet d'encapsuler le chargement et la compilation des shader OpenGL. Les erreurs
-   * de chargement et de compilation sont reportées sur le flux de sortie d'erreur, et des
-   * exceptions de type CShaderException sont levées. Pour éviter les envoies d'exception, vous
-   * devez définir la macro _DONT_USE_SHADER_EXCEPTION préalablement à l'inclusion du fichier
+   * de chargement et de compilation sont reportÃ©es sur le flux de sortie d'erreur, et des
+   * exceptions de type CShaderException sont levÃ©es. Pour Ã©viter les envoies d'exception, vous
+   * devez dÃ©finir la macro _DONT_USE_SHADER_EXCEPTION prÃ©alablement Ã  l'inclusion du fichier
    * CShader.h
    */
   class GLSHADERPP_API CShader
