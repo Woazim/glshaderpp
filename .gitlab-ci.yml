@@ -90,7 +90,7 @@ docker-test:
       echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag}
-  - docker run --rm --pull $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb& cd build && ../bin/ctest"
+  - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb& cd build && ../bin/ctest"
 sast:
   stage: test
 include:
