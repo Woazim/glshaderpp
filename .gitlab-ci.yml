@@ -55,7 +55,7 @@ docker-build:
       echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag} || true
-  - docker build --pull --cache-from $CI_REGISTRY_IMAGE${tag} --tag $CI_REGISTRY_IMAGE${tag} .
+  - docker build --cache-from $CI_REGISTRY_IMAGE${tag} --tag $CI_REGISTRY_IMAGE${tag} .
   - docker create --name glshaderpp_container "$CI_REGISTRY_IMAGE${tag}"
   - docker cp glshaderpp_container:/root/.conan ./.conan
   - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
