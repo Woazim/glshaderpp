@@ -1,7 +1,7 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-Debug-Dynamic",
+      "name": "x64-Debug",
       "generator": "Visual Studio 16 2019 Win64",
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -14,11 +14,6 @@
         {
           "name": "BUILD_TESTING",
           "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "False",
           "type": "BOOL"
         },
         {
@@ -29,7 +24,7 @@
       ]
     },
     {
-      "name": "x64-Release-Dynamic",
+      "name": "x64-Release",
       "generator": "Visual Studio 16 2019 Win64",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -40,11 +35,6 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "variables": [
         {
-          "name": "STATIC_LIB",
-          "value": "False",
-          "type": "BOOL"
-        },
-        {
           "name": "BUILD_TESTING",
           "value": "True",
           "type": "BOOL"
@@ -52,53 +42,7 @@
       ]
     },
     {
-      "name": "x64-Debug-Static",
-      "generator": "Visual Studio 16 2019 Win64",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ]
-    },
-    {
-      "name": "x64-Release-Static",
-      "generator": "Visual Studio 16 2019 Win64",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "variables": [
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ]
-    },
-    {
-      "name": "WSL-GCC-Debug-Dynamic",
+      "name": "WSL-GCC-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -129,7 +73,7 @@
       ]
     },
     {
-      "name": "WSL-GCC-Release-Dynamic",
+      "name": "WSL-GCC-Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -155,69 +99,7 @@
       ]
     },
     {
-      "name": "WSL-GCC-Debug-Static",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_x64" ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "CONAN_PROFILE",
-          "value": "gcc",
-          "type": "STRING"
-        }
-      ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    },
-    {
-      "name": "WSL-GCC-Release-Static",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_x64" ],
-      "variables": [
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "CONAN_PROFILE",
-          "value": "gcc",
-          "type": "STRING"
-        }
-      ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    },
-    {
-      "name": "WSL-Clang-Debug-Dynamic",
+      "name": "WSL-Clang-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -243,7 +125,7 @@
       ]
     },
     {
-      "name": "WSL-Clang-Release-Dynamic",
+      "name": "WSL-Clang-Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\build\\${name}",
@@ -261,68 +143,6 @@
         },
         {
           "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    },
-    {
-      "name": "WSL-Clang-Debug-Static",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_clang_x64" ],
-      "variables": [
-        {
-          "name": "CONAN_PROFILE",
-          "value": "clang",
-          "type": "STRING"
-        },
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    },
-    {
-      "name": "WSL-Clang-Release-Static",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_clang_x64" ],
-      "variables": [
-        {
-          "name": "CONAN_PROFILE",
-          "value": "clang",
-          "type": "STRING"
-        },
-        {
-          "name": "BUILD_TESTING",
-          "value": "True",
-          "type": "BOOL"
-        },
-        {
-          "name": "STATIC_LIB",
           "value": "True",
           "type": "BOOL"
         }

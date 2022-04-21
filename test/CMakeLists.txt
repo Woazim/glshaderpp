@@ -2,63 +2,87 @@ cmake_minimum_required (VERSION 3.8)
 
 project("testProg")
 
-add_executable (testProg)
+add_executable (${PROJECT_NAME})
 file(GLOB testProg_SRC "*.h" "*.cpp")
-target_sources(testProg PRIVATE ${testProg_SRC})
+target_sources(${PROJECT_NAME} PRIVATE ${testProg_SRC})
+target_sources(${PROJECT_NAME} PRIVATE conanfile.txt)
 
-if(STATIC_LIB)
-    add_compile_definitions(GLSHADERPP_STATIC)
+#set CC and CXX environment variables to this cmake instance compiler (needed if conan needs to build some packages)
+set(ENV{CC} ${CMAKE_C_COMPILER})
+set(ENV{CXX} ${CMAKE_CXX_COMPILER})
+
+#for some mystical reasons, clang sometimes use a very old stdlib (libstdc++)
+if(CMAKE_CXX_COMPILER MATCHES [[clang\+\+.*]])
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif()
 
-set_property(TARGET testProg PROPERTY CXX_STANDARD 20)
-set_property(TARGET testProg PROPERTY CXX_STANDARD_REQUIRED ON)
+#ignore unfound PDBs during linking with MSVC compiler
+if(MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/ignore:4099")
+endif()
+
+# Execute conan to install dependencies in Release and / or Debug mode
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(is_multi_config)
+	message("Multi config generator")
+	execute_process(COMMAND conan install "${CMAKE_CURRENT_SOURCE_DIR}" --profile=${CONAN_PROFILE} --build missing -if "${CMAKE_BINARY_DIR}" -s build_type=Debug -g cmake_multi)
+	execute_process(COMMAND conan install "${CMAKE_CURRENT_SOURCE_DIR}" --profile=${CONAN_PROFILE} --build missing -if "${CMAKE_BINARY_DIR}" -s build_type=Release -g cmake_multi)
+else()
+	message("Build type : ${CMAKE_BUILD_TYPE}")
+	execute_process(COMMAND conan install "${CMAKE_CURRENT_SOURCE_DIR}" --profile=${CONAN_PROFILE} --build missing -if "${CMAKE_BINARY_DIR}" -s build_type=${CMAKE_BUILD_TYPE})
+endif()
+
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+else()
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+endif()
+conan_basic_setup(TARGETS)
+
+set(CMAKE_DEBUG_POSTFIX d)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 if(TARGET CONAN_PKG::glfw)
-    target_link_libraries(testProg CONAN_PKG::glfw)
+    target_link_libraries(${PROJECT_NAME} CONAN_PKG::glfw)
 endif()
 if(TARGET CONAN_PKG::glew)
-    target_link_libraries(testProg CONAN_PKG::glew)
+    target_link_libraries(${PROJECT_NAME} CONAN_PKG::glew)
 endif()
 if(TARGET CONAN_PKG::catch2)
-    target_link_libraries(testProg CONAN_PKG::catch2)
+    target_link_libraries(${PROJECT_NAME} CONAN_PKG::catch2)
 endif()
 
-target_link_libraries(testProg libGLShaderPP)
+target_link_libraries(${PROJECT_NAME} libGLShaderPP)
 
 # copy shader files
 file(GLOB shaderFiles "shaders/*.*")
-add_custom_command(TARGET testProg POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
                        ${shaderFiles}
                            $<TARGET_FILE_DIR:testProg>)
 # copy dataset files
 file(GLOB datasetFiles "dataset/*.*")
-add_custom_command(TARGET testProg POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
                        ${datasetFiles}
                            $<TARGET_FILE_DIR:testProg>)
-# copy dynamic linked library
-if(NOT STATIC_LIB)
-    add_custom_command(TARGET testProg POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-                           $<TARGET_FILE:libGLShaderPP>
-                               $<TARGET_FILE_DIR:testProg>)
-endif()
 
-set_property(TARGET testProg PROPERTY VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
+set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
-add_test(NAME direct-shader-from-files      COMMAND testProg [direct-shader-from-files]     WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME shader-from-files             COMMAND testProg [shader-from-files]            WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-shader-from-strings    COMMAND testProg [direct-shader-from-strings]   WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-vertex-from-files      COMMAND testProg [direct-vertex-from-files]     WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-fragment-from-files    COMMAND testProg [direct-fragment-from-files]   WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME vertex-from-files             COMMAND testProg [vertex-from-files]            WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME fragment-from-files           COMMAND testProg [fragment-from-files]          WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-faulty-vertex          COMMAND testProg [direct-faulty-vertex]         WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME faulty-vertex                 COMMAND testProg [faulty-vertex]                WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-notready-program       COMMAND testProg [direct-notready-program]      WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME notready-program              COMMAND testProg [notready-program]             WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME direct-faulty-program         COMMAND testProg [direct-faulty-program]        WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME faulty-program                COMMAND testProg [faulty-program]               WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME bad-source-stream             COMMAND testProg [bad-source-stream]            WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
-add_test(NAME no-glewinit                   COMMAND testProg [no-glewinit]                  WORKING_DIRECTORY $<TARGET_FILE_DIR:testProg>)
+add_test(NAME direct-shader-from-files      COMMAND ${PROJECT_NAME} [direct-shader-from-files]     WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME shader-from-files             COMMAND ${PROJECT_NAME} [shader-from-files]            WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-shader-from-strings    COMMAND ${PROJECT_NAME} [direct-shader-from-strings]   WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-vertex-from-files      COMMAND ${PROJECT_NAME} [direct-vertex-from-files]     WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-fragment-from-files    COMMAND ${PROJECT_NAME} [direct-fragment-from-files]   WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME vertex-from-files             COMMAND ${PROJECT_NAME} [vertex-from-files]            WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME fragment-from-files           COMMAND ${PROJECT_NAME} [fragment-from-files]          WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-faulty-vertex          COMMAND ${PROJECT_NAME} [direct-faulty-vertex]         WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME faulty-vertex                 COMMAND ${PROJECT_NAME} [faulty-vertex]                WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-notready-program       COMMAND ${PROJECT_NAME} [direct-notready-program]      WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME notready-program              COMMAND ${PROJECT_NAME} [notready-program]             WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME direct-faulty-program         COMMAND ${PROJECT_NAME} [direct-faulty-program]        WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME faulty-program                COMMAND ${PROJECT_NAME} [faulty-program]               WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME bad-source-stream             COMMAND ${PROJECT_NAME} [bad-source-stream]            WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_test(NAME no-glewinit                   COMMAND ${PROJECT_NAME} [no-glewinit]                  WORKING_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>)

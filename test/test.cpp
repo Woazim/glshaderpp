@@ -223,6 +223,16 @@ void testTriangle(const int nWndWidth, const int nWndHeight)
 
 }
 
+//This test must be the first one, since others will initialise Glew.
+TEST_CASE("Try to create a shader object without having called glewInit", "[no-glewinit]")
+{
+  CHECK_THROWS_MATCHES(
+    std::make_unique<GLShaderPP::CShader>(GL_VERTEX_SHADER),
+    GLShaderPP::CShaderException,
+    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::GlewInit))
+  );
+}
+
 TEST_CASE("Create a typical GLSL program from files at construction of CShaderProgram", "[direct-shader-from-files]")
 {
   constexpr int nWndWidth = 800;
@@ -508,18 +518,6 @@ TEST_CASE("Try to read source from a bad stream", "[bad-source-stream]")
     vertex.SetSource(std::ifstream("This file should not exists", std::ios_base::in)),
     GLShaderPP::CShaderException,
     AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::BadSourceStream))
-  );
-
-  glfwTerminate();
-}
-
-TEST_CASE("Try to create a shader object without having called glewInit", "[no-glewinit]")
-{
-  //This will fails since there are two main functions in vertex shader
-  CHECK_THROWS_MATCHES(
-    std::make_unique<GLShaderPP::CShader>(GL_VERTEX_SHADER),
-    GLShaderPP::CShaderException,
-    AreSimilarShaderException(GLShaderPP::CShaderException(""s, GLShaderPP::CShaderException::ExceptionType::GlewInit))
   );
 
   glfwTerminate();
