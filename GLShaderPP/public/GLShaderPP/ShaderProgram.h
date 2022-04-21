@@ -4,7 +4,7 @@
  * 
  * \author    Benjamin ALBOUY-KISSI
  * \date      2022
- * \copyright GNU Public License v3
+ * \copyright GNU Lesser Public License v3
  *********************************************************************/
 
 #pragma once
