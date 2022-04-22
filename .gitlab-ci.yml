@@ -91,6 +91,19 @@ docker-test:
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag}
   - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb& cd build && ../bin/ctest"
+docker-deploy:
+  image: docker:latest
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+    GIT_STRATEGY: none
+  stage: deploy
+  dependencies:
+    - docker-build
+  artifacts:
+    paths:
+    - install
 sast:
   stage: test
 include:
