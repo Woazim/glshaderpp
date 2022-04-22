@@ -32,7 +32,7 @@ WORKDIR /home/conan/glshaderPP
 RUN if [ -d .conan ]; then cp -r .conan /home/conan/; fi
 
 # This command configure sources with CMake, build it, install it
-RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On \
+RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On -D BUILD_DOCUMENTATION=On \
     && cmake --build . \
     && cmake --install . --prefix=/home/conan/glshaderPP/install
 
