@@ -22,7 +22,7 @@ RUN    sudo apt-get update \
                                libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
                                libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev \
                                xvfb \
-                               graphviz \
+                               graphviz doxygen \
     && sudo apt-get clean
 
 # These commands copy sources in the image
