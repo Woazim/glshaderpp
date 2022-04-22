@@ -84,7 +84,7 @@ namespace GLShaderPP {
      * 
      * After creating a CShaderProgram this way, you have to AttachShader()s to it then Link() it.
      * 
-     * \throw If \c glCreateProgram is \c nullptr, a CShaderException::ExceptionType::GlewInit typed CShaderException 
+     * \throw CShaderException If \c glCreateProgram is \c nullptr, a CShaderException::ExceptionType::GlewInit typed CShaderException 
      * is thrown. It may append when your OpenGL function loader is not initialised. This exception is thrown whenever
      * #_DONT_USE_SHADER_EXCEPTION is defined or not.
      */
@@ -128,7 +128,7 @@ namespace GLShaderPP {
      * 
      * \note A possibly more convenient way to do the same task is to use operator<<().
      * 
-     * \throw A CShaderException::ExceptionType::PrepareLinkError typed CShaderException if
+     * \throw CShaderException A CShaderException::ExceptionType::PrepareLinkError typed CShaderException if
      * \c s is not compiled and #_DONT_USE_SHADER_EXCEPTION is not defined. If #_DONT_USE_SHADER_EXCEPTION
      * is defined, a message is displayed in stderr.
      */
@@ -164,7 +164,7 @@ namespace GLShaderPP {
     /**
      * \brief Links this shader program.
      *
-     * \throw A CShaderException::ExceptionType::LinkError typed CShaderException if link is not possible
+     * \throw CShaderException A CShaderException::ExceptionType::LinkError typed CShaderException if link is not possible
      * and #_DONT_USE_SHADER_EXCEPTION is not defined. If #_DONT_USE_SHADER_EXCEPTION is defined, 
      * a message is displayed in stderr.
      */

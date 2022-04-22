@@ -47,7 +47,7 @@ This is the simplest way to use GLShaderPP. Finally, a typical OpenGL applicatio
 
 ## Manually GLSL compilation and link
 
-## Error management
+## Error management                         {#error-management}
 
 Two error management systems are hardcoded in GLShaderPP. The first by using `std::exception` derived classes when GLShaderPP is defaultly compiled and the second with simple error codes when GLShaderPP is compiled with `_DONT_USE_SHADER_EXCEPTION` preprocessor constant defined.
 

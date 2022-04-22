@@ -1,9 +1,11 @@
-/*!
- * \file Shader.h
- * Ce fichier contient la déclaration de la classe CShader
+/*****************************************************************//**
+ * \file      Shader.h
+ * \brief     Declaration of CShader class
  * 
- * Copyright (c) 2015 by Benjamin ALBOUY-KISSI
- */
+ * \author    Benjamin ALBOUY-KISSI
+ * \date      2022
+ * \copyright GNU Lesser Public License v3
+ *********************************************************************/
 #pragma once
 #include <string>
 #include <istream>
@@ -13,6 +15,15 @@
 namespace GLShaderPP {
 
 #ifdef GLEW_VERSION
+  /**
+   * \brief Initialise GLEW
+   * 
+   * This function is called if you included \c glew.h and if it seems that GLEW has not been initialised
+   * (OpenGL functions are null pointers). It tries to init GLEW by calling \c glewInit() and if it fails it 
+   * will throw a CShaderException::ExceptionType::GlewInit typed CShaderException.
+   * 
+   * \throw CShaderException A CShaderException::ExceptionType::GlewInit typed CShaderException if \c glewInit() fails.
+   */
   inline void GlewInit() {
     glewExperimental = GL_TRUE;
     GLenum err;
@@ -22,30 +33,44 @@ namespace GLShaderPP {
 #endif
 
   /*!
-   * \brief Classe de chargement et compilation d'un shader
+   * \brief Loads and compiles an OpenGL shader
    *
-   * Cette classe permet d'encapsuler le chargement et la compilation des shader OpenGL. Les erreurs
-   * de chargement et de compilation sont reportées sur le flux de sortie d'erreur, et des
-   * exceptions de type CShaderException sont levées. Pour éviter les envoies d'exception, vous
-   * devez définir la macro _DONT_USE_SHADER_EXCEPTION préalablement à l'inclusion du fichier
-   * CShader.h
+   * This class encapsulates the loading and compilation of OpenGL shaders. If #_DONT_USE_SHADER_EXCEPTION
+   * is defined before including this file, loading and compilation errors are reported to the error output
+   * stream. Otherwise, CShaderException objects are thrown. 
+   * 
+   * To use this class, you can automatically load and compile a shader by constructing a CShader with
+   * CShader(GLenum eShaderType, const std::string& strSource) or CShader(GLenum eShaderType, const std::istream& streamSource)
+   * 
+   * Alternatively, you can create an empty CShader object with CShader(GLenum eShaderType). Then, call one of the SetSource() 
+   * functions followed by a call to Compile()
    */
   class CShader
   {
   public:
+    /**
+     * Enumaration of possible states of shader compilation.
+     */
     enum class ShaderCompileState
     {
-      notCompiled,
-      compileError,
-      compileOk
+      notCompiled,      //!< Compilation has not been tried.
+      badSourceStream,  //!< The source stream is not readable
+      compileError,     //!< An error occured during compilation.
+      compileOk         //!< Compilation is Ok.
     };
   private:
-    ShaderCompileState m_eCompileState = ShaderCompileState::notCompiled;
-    GLuint m_nShaderId;
 
-    //rend cette classe non copiable
+    ShaderCompileState m_eCompileState = ShaderCompileState::notCompiled; //!< State of the shader compilation
+    GLuint m_nShaderId; //!< Identifier of the underlying OpenGL shader object.
+
     CShader(const CShader&) = delete;
     CShader& operator=(const CShader&) = delete;
+
+    /**
+     * \brief Create the underlying OpenGL shader object.
+     * 
+     * \param eShaderType OpenGL type of this shader.
+     */
     void createShader(GLenum eShaderType) {
       if (!glCreateShader)
 #ifdef GLEW_VERSION
@@ -57,19 +82,57 @@ namespace GLShaderPP {
     }
 
   public:
+    /**
+     * \brief Creates an empty shader object.
+     * 
+     * \param eShaderType OpenGL type of this shader.
+     * 
+     * \see <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glCreateShader.xhtml">OpenGL's glCreateShader()</a> for \c eShaderType possible values
+     */
     CShader(GLenum eShaderType) { createShader(eShaderType); }
-    CShader(GLenum eShaderType, const std::string& strSource) { 
+
+    /**
+     * \brief Creates an shader object from string source.
+     *
+     * This constructor creates the shader, sets its source code from a string then compiles it.
+     * 
+     * \param eShaderType OpenGL type of this shader.
+     * \param strSource The string of the GLSL source code of the shader.
+     *
+     * \see <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glCreateShader.xhtml">OpenGL's glCreateShader()</a> for \c eShaderType possible values
+     */
+    CShader(GLenum eShaderType, const std::string& strSource) {
       createShader(eShaderType);
       SetSource(strSource);
       Compile();
     }
-    CShader(GLenum eShaderType, const std::istream& streamSource) { 
+
+    /**
+     * \brief Creates an shader object from string source.
+     *
+     * This constructor creates the shader, sets its source code from an istream then compiles it.
+     *
+     * \param eShaderType OpenGL type of this shader.
+     * \param streamSource The stream containing the GLSL source code of the shader.
+     *
+     * \see <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glCreateShader.xhtml">OpenGL's glCreateShader()</a> for \c eShaderType possible values
+     */
+    CShader(GLenum eShaderType, const std::istream& streamSource) {
       createShader(eShaderType);
       SetSource(streamSource);
       Compile();
     }
+
+    /**
+     * \brief Deletes the underlying OpenGL shader object.
+     */
     ~CShader() { glDeleteShader(m_nShaderId); }
 
+    /**
+     * \brief Sets the GLSL source code of the shader from a string.
+     * 
+     * \param strSource The string of the GLSL source code of the shader.
+     */
     void SetSource(const std::string& strSource)
     {
       const GLchar* vertexShaderSource = strSource.c_str();
@@ -77,6 +140,14 @@ namespace GLShaderPP {
       m_eCompileState = ShaderCompileState::notCompiled;
     }
 
+    /**
+     * \brief Sets the GLSL source code of the shader from an istream.
+     *
+     * \param streamSource The istream containing the GLSL source code of the shader.
+     * 
+     * \throw CShaderException If #_DONT_USE_SHADER_EXCEPTION is defined, it may throw a CShaderException::ExceptionType::BadSourceStream 
+     * typed CShaderException if the source stream is not readable for any reason.
+     */
     void SetSource(const std::istream& streamSource)
     {
       if (streamSource.good())
@@ -88,6 +159,7 @@ namespace GLShaderPP {
       }
       else
       {
+        m_eCompileState = ShaderCompileState::badSourceStream;
         std::string what{ "Can not open " + GetType() + " shader sources" };
 #ifndef _DONT_USE_SHADER_EXCEPTION
         throw CShaderException(what, CShaderException::ExceptionType::BadSourceStream);
@@ -97,6 +169,12 @@ namespace GLShaderPP {
       }
     }
 
+    /**
+     * \brief Compiles the GLSL source code of this shader.
+     * 
+     * \throw CShaderException If #_DONT_USE_SHADER_EXCEPTION is defined, it may throw a CShaderException::ExceptionType::CompilationError
+     * typed CShaderException if the compilation fails.
+     */
     void Compile()
     {
       if (m_eCompileState != ShaderCompileState::notCompiled)
@@ -125,6 +203,18 @@ namespace GLShaderPP {
       }
     }
 
+    /**
+     * \brief Returns a string representation of this shader type.
+     * 
+     * \return Possible values are:
+     * - "compute"
+     * - "vertex"
+     * - "tesselation control"
+     * - "tesselation evaluation"
+     * - "geometry"
+     * - "fragment"
+     * - "unknown"
+     */
     std::string GetType() const
     {
       GLint type;
@@ -148,8 +238,14 @@ namespace GLShaderPP {
       }
     }
 
-  public:
+    /**
+     * \brief Gets the state of this shader compilation.
+     */
     ShaderCompileState GetCompileState() const { return m_eCompileState; }
+
+    /**
+     * \brief Gets the identifier of the underlying OpenGL shader object.
+     */
     GLuint GetShaderId() const { return m_nShaderId; }
   };
 
