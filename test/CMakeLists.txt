@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.12)
 
 project("testProg")
 
@@ -6,14 +6,31 @@ add_executable (${PROJECT_NAME})
 file(GLOB testProg_SRC "*.h" "*.cpp")
 target_sources(${PROJECT_NAME} PRIVATE ${testProg_SRC})
 target_sources(${PROJECT_NAME} PRIVATE conanfile.txt)
+target_sources(${PROJECT_NAME} PRIVATE ../GLShaderPP/public/GLShaderPP/Shader.h)
+target_sources(${PROJECT_NAME} PRIVATE ../GLShaderPP/public/GLShaderPP/ShaderException.h)
+target_sources(${PROJECT_NAME} PRIVATE ../GLShaderPP/public/GLShaderPP/ShaderProgram.h)
 
 #set CC and CXX environment variables to this cmake instance compiler (needed if conan needs to build some packages)
 set(ENV{CC} ${CMAKE_C_COMPILER})
 set(ENV{CXX} ${CMAKE_CXX_COMPILER})
 
 #for some mystical reasons, clang sometimes use a very old stdlib (libstdc++)
-if(CMAKE_CXX_COMPILER MATCHES [[clang\+\+.*]])
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("Code coverage enabled")
+    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
+    setup_target_for_coverage_gcovr_html(
+        NAME ${PROJECT_NAME}_coverage 
+        EXECUTABLE ctest -j ${PROCESSOR_COUNT}
+        DEPENDENCIES ${PROJECT_NAME}
+        BASE_DIRECTORY ${PROJECT_SOURCE_DIR}/..
+        EXCLUDE "test/*"
+    )
 endif()
 
 #ignore unfound PDBs during linking with MSVC compiler
