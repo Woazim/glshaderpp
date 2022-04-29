@@ -40,8 +40,8 @@ RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TES
     && cd ..
 
 # This command configure sources with CMake for code coverage analysis then build it.
-RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=On
-    && cmake --build . -t testProg_coverage\
+RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=On \
+    && cmake --build . -t testProg_coverage \
     && cd ..
 
 FROM ubuntu:latest as tester
