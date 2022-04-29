@@ -23,6 +23,7 @@ RUN    sudo apt-get update \
                                libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev \
                                xvfb \
                                graphviz doxygen \
+                               gcovr
     && sudo apt-get clean
 
 # These commands copy sources in the image
@@ -35,7 +36,13 @@ RUN if [ -d .conan ]; then cp -r .conan /home/conan/; fi
 # This command configure sources with CMake, build it, install it
 RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On -D BUILD_DOCUMENTATION=On \
     && cmake --build . \
-    && cmake --install . --prefix=/home/conan/glshaderPP/install
+    && cmake --install . --prefix=/home/conan/glshaderPP/install \
+    && cd ..
+
+# This command configure sources with CMake for code coverage analysis then build it.
+RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=On
+    && cmake --build . -t testProg_coverage\
+    && cd ..
 
 FROM ubuntu:latest as tester
 
