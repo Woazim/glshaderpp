@@ -1,6 +1,0 @@
-# CMake generation dependency list for this directory.
-C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeParseArguments.cmake
-C:/Users/Woazim/source/repos/glshaderpp/test/CMakeLists.txt
-C:/Users/Woazim/source/repos/glshaderpp/testbuild/conanbuildinfo_debug.cmake
-C:/Users/Woazim/source/repos/glshaderpp/testbuild/conanbuildinfo_multi.cmake
-C:/Users/Woazim/source/repos/glshaderpp/testbuild/conanbuildinfo_release.cmake
