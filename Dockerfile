@@ -21,8 +21,13 @@ RUN    sudo apt-get update \
                                xtrans-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev \
                                libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
                                libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev \
-                               xvfb \
                                graphviz doxygen \
+                               \
+                               xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
+                               libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
+                               libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
+                               libxcb-xinerama0 libglu1-mesa \
+                               \
                                gcovr \
     && sudo apt-get clean
 
