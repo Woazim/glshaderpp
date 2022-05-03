@@ -1,0 +1,11 @@
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/CMakeFiles/RUN_TESTS.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/CMakeFiles/INSTALL.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/GLShaderPP/CMakeFiles/RUN_TESTS.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/GLShaderPP/CMakeFiles/INSTALL.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/GLShaderPP/CMakeFiles/ALL_BUILD.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/test/CMakeFiles/testProg.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/test/CMakeFiles/RUN_TESTS.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/test/CMakeFiles/INSTALL.dir
+C:/Users/Woazim/source/repos/glshaderpp/testbuild/test/CMakeFiles/ALL_BUILD.dir

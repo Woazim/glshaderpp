@@ -24,13 +24,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
     include(CodeCoverage)
     append_coverage_compiler_flags()
-    setup_target_for_coverage_gcovr_html(
-        NAME ${PROJECT_NAME}_coverage 
-        EXECUTABLE ctest -j ${PROCESSOR_COUNT}
-        DEPENDENCIES ${PROJECT_NAME}
-        BASE_DIRECTORY ${PROJECT_SOURCE_DIR}/..
-        EXCLUDE "test/*"
-    )
+    if(GCOVR_PATH)
+        setup_target_for_coverage_gcovr_html(
+            NAME ${PROJECT_NAME}_coverage 
+            EXECUTABLE ctest -j ${PROCESSOR_COUNT}
+            DEPENDENCIES ${PROJECT_NAME}
+            BASE_DIRECTORY ${PROJECT_SOURCE_DIR}/..
+            EXCLUDE "test/*"
+        )
+    endif() # GCOVR_PATH
 endif()
 
 #ignore unfound PDBs during linking with MSVC compiler

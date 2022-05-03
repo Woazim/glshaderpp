@@ -1,0 +1,34 @@
+{
+ "options": [
+  [
+   "catch2:default_reporter",
+   "None"
+  ],
+  [
+   "catch2:with_main",
+   "False"
+  ],
+  [
+   "catch2:with_prefix",
+   "False"
+  ],
+  [
+   "glew:shared",
+   "False"
+  ],
+  [
+   "glfw:shared",
+   "False"
+  ],
+  [
+   "glfw:vulkan_static",
+   "False"
+  ]
+ ],
+ "root": {
+  "name": null,
+  "version": null,
+  "user": null,
+  "channel": null
+ }
+}
