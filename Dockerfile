@@ -23,7 +23,6 @@ RUN    sudo apt-get update \
                                libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev \
                                xvfb \
                                graphviz doxygen \
-                               gcovr \
     && sudo apt-get clean
 
 # These commands copy sources in the image
@@ -41,7 +40,7 @@ RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TES
 
 # This command configure sources with CMake for code coverage analysis then build it.
 RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=On \
-    && cmake --build . -t testProg_coverage \
+    && cmake --build . \
     && cd ..
 
 FROM ubuntu:latest as tester
@@ -53,7 +52,7 @@ WORKDIR /home/conan/glshaderPP
 RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
                                          libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
                                          libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
-                                         libxcb-xinerama0 libglu1-mesa && \
+                                         libxcb-xinerama0 libglu1-mesa gcovr && \
     wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0-linux-x86_64.sh && \
     chmod +x cmake.sh && ./cmake.sh --skip-license && \
     apt-get clean && rm cmake.sh

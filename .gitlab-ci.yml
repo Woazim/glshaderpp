@@ -73,6 +73,9 @@ docker-test:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ''
     GIT_STRATEGY: none
+  artifacts:
+    paths:
+    - testProg_coverage
   stage: test
   dependencies:
     - docker-build
@@ -91,6 +94,9 @@ docker-test:
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag}
   - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb& cd build && ../bin/ctest"
+  - docker run --name glshaderpp_test_container $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb& cd build-gcov/test && ../bin/ctest -j && mkdir testProg_coverage && gcovr --html testProg_coverage/index.html --html-details -r /home/conan/glshaderPP -e "/home/conan/glshaderPP/test/*" --object-directory=/home/conan/glshaderPP/build-gcov/test"
+  - docker cp glshaderpp_test_container:/home/conan/glshaderPP/build-gcov/test/testProg_coverage ./testProg_coverage
+  - docker container rm glshaderpp_test_container
 docker-deploy:
   image: docker:latest
   variables:
