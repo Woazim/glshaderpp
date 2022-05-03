@@ -11,6 +11,9 @@ RUN conan config init && conan profile update settings.compiler.libcxx=libstdc++
 # This command upgrade CMake
 RUN pip install cmake -U
 
+# This command install gcovr
+RUN pip install gcovr -U
+
 #Installing all dependencies
 RUN    sudo apt-get update \
     && sudo apt-get install -y libglu1-mesa-dev  libx11-dev libx11-xcb-dev libfontenc-dev libice-dev \
@@ -21,8 +24,8 @@ RUN    sudo apt-get update \
                                xtrans-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev \
                                libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev \
                                libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev \
-                               xvfb \
                                graphviz doxygen \
+                               xvfb \
     && sudo apt-get clean
 
 # These commands copy sources in the image
@@ -35,20 +38,26 @@ RUN if [ -d .conan ]; then cp -r .conan /home/conan/; fi
 # This command configure sources with CMake, build it, install it
 RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On -D BUILD_DOCUMENTATION=On \
     && cmake --build . \
-    && cmake --install . --prefix=/home/conan/glshaderPP/install
+    && cmake --install . --prefix=/home/conan/glshaderPP/install \
+    && cd ..
 
-FROM ubuntu:latest as tester
+# This command configure sources with CMake for code coverage analysis then build it.
+RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTING=On \
+    && cmake --build . \
+    && cd ..
 
-COPY --from=builder /home/conan/glshaderPP /home/conan/glshaderPP
-COPY --from=builder /home/conan/.conan /root/.conan
-WORKDIR /home/conan/glshaderPP
+#FROM ubuntu:latest as tester
 
-RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
-                                         libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
-                                         libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
-                                         libxcb-xinerama0 libglu1-mesa && \
-    wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0-linux-x86_64.sh && \
-    chmod +x cmake.sh && ./cmake.sh --skip-license && \
-    apt-get clean && rm cmake.sh
+#COPY --from=builder /home/conan/glshaderPP /home/conan/glshaderPP
+#COPY --from=builder /home/conan/.conan /root/.conan
+#WORKDIR /home/conan/glshaderPP
+
+#RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
+#                                         libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
+#                                         libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
+#                                         libxcb-xinerama0 libglu1-mesa gcovr && \
+#    wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0-linux-x86_64.sh && \
+#    chmod +x cmake.sh && ./cmake.sh --skip-license && \
+#    apt-get clean && rm cmake.sh
 
 ENV DISPLAY :0
