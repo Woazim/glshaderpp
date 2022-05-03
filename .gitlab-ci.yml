@@ -40,6 +40,7 @@ docker-build:
     paths:
     - install
     - build
+    - build-gcov
   stage: build
   services:
   - docker:dind
@@ -60,6 +61,7 @@ docker-build:
   - docker cp glshaderpp_container:/root/.conan ./.conan
   - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
   - docker cp glshaderpp_container:/home/conan/glshaderPP/build ./build
+  - docker cp glshaderpp_container:/home/conan/glshaderPP/build-gcov ./build-gcov
   - docker container rm glshaderpp_container
   - docker push "$CI_REGISTRY_IMAGE${tag}"
   rules:
