@@ -53,6 +53,7 @@ RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D B
 
 FROM commonbase as tester
 
+COPY --from=builder /root/glshaderPP/install /root/glshaderPP/install
 COPY --from=builder /root/glshaderPP/build /root/glshaderPP/build
 COPY --from=builder /root/glshaderPP/build-gcov /root/glshaderPP/build-gcov
 COPY --from=builder /root/.conan /root/.conan
