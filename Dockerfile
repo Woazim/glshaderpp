@@ -43,7 +43,7 @@ RUN conan config init && conan profile update settings.compiler.libcxx=libstdc++
 # This command configure sources with CMake, build it, install it
 RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On -D BUILD_DOCUMENTATION=On \
     && cmake --build . \
-    && cmake --install . --prefix=/home/conan/glshaderPP/install \
+    && cmake --install . --prefix=/root/glshaderPP/install \
     && cd ..
 
 # This command configure sources with CMake for code coverage analysis then build it.
