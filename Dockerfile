@@ -17,7 +17,7 @@ RUN apt-get update && \
 COPY . /root/glshaderPP
 WORKDIR /root/glshaderPP
 # If there is any conan cache in .conan, copy it in its right place
-RUN if [ -d .conan ]; then mv -r .conan /root/; fi
+RUN if [ -d .conan ]; then mv .conan /root/; fi
 
 FROM commonbase as builder
 
@@ -39,9 +39,6 @@ RUN apt-get install -y g++-10 make \
 
 # This command initialise conan
 RUN conan config init && conan profile update settings.compiler.libcxx=libstdc++11 default
-
-#COPY --chown=conan:1001 . /home/conan/glshaderPP
-#RUN if [ -d .conan ]; then cp -r .conan /home/conan/; fi
 
 # This command configure sources with CMake, build it, install it
 RUN mkdir build && cd build && cmake .. -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On -D BUILD_DOCUMENTATION=On \
