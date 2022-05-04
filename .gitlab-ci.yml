@@ -59,9 +59,9 @@ docker-build:
   - docker build --cache-from $CI_REGISTRY_IMAGE${tag} --tag $CI_REGISTRY_IMAGE${tag} .
   - docker create --name glshaderpp_container "$CI_REGISTRY_IMAGE${tag}"
   - docker cp glshaderpp_container:/root/.conan ./.conan
-  - docker cp glshaderpp_container:/home/conan/glshaderPP/install ./install
-  - docker cp glshaderpp_container:/home/conan/glshaderPP/build ./build
-  - docker cp glshaderpp_container:/home/conan/glshaderPP/build-gcov ./build-gcov
+  - docker cp glshaderpp_container:/root/glshaderPP/install ./install
+  - docker cp glshaderpp_container:/root/glshaderPP/build ./build
+  - docker cp glshaderpp_container:/root/glshaderPP/build-gcov ./build-gcov
   - docker container rm glshaderpp_container
   - docker push "$CI_REGISTRY_IMAGE${tag}"
   rules:
@@ -97,8 +97,8 @@ docker-test:
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag}
   - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ctest -j $NBPROCS"
-  - docker run --name glshaderpp_test_container $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build-gcov/test && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ctest -j $NBPROCS && mkdir testProg_coverage && chmod a+rw testProg_coverage && gcovr --html testProg_coverage/index.html --html-details -r /home/conan/glshaderPP -e '/home/conan/glshaderPP/test/*' --object-directory=/home/conan/glshaderPP/build-gcov/test -s"
-  - docker cp glshaderpp_test_container:/home/conan/glshaderPP/build-gcov/test/testProg_coverage ./testProg_coverage
+  - docker run --name glshaderpp_test_container $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build-gcov/test && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ctest -j $NBPROCS && mkdir testProg_coverage && gcovr --html testProg_coverage/index.html --html-details -r /root/glshaderPP -e '/root/glshaderPP/test/*' --object-directory=/root/glshaderPP/build-gcov/test -s"
+  - docker cp glshaderpp_test_container:/root/glshaderPP/build-gcov/test/testProg_coverage ./testProg_coverage
   - docker container rm glshaderpp_test_container
 docker-deploy:
   image: docker:latest
