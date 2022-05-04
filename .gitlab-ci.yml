@@ -96,8 +96,8 @@ docker-test:
       echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
     fi
   - docker pull $CI_REGISTRY_IMAGE${tag}
-  - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ctest -j $NBPROCS"
-  - docker run --name glshaderpp_test_container $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build-gcov/test && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ctest -j $NBPROCS && mkdir testProg_coverage && chmod a+rw testProg_coverage && gcovr --html testProg_coverage/index.html --html-details -r /home/conan/glshaderPP -e '/home/conan/glshaderPP/test/*' --object-directory=/home/conan/glshaderPP/build-gcov/test -s"
+  - docker run --rm $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ../bin/ctest -j $NBPROCS"
+  - docker run --name glshaderpp_test_container $CI_REGISTRY_IMAGE${tag} sh -c "Xvfb -screen 0 1280x1024x24 -ac -nolisten unix& cd build-gcov/test && NBPROCS=`cat /proc/cpuinfo | grep processor | wc -l` && ../../bin/ctest -j $NBPROCS && mkdir testProg_coverage && chmod a+rw testProg_coverage && gcovr --html testProg_coverage/index.html --html-details -r /home/conan/glshaderPP -e '/home/conan/glshaderPP/test/*' --object-directory=/home/conan/glshaderPP/build-gcov/test -s"
   - docker cp glshaderpp_test_container:/home/conan/glshaderPP/build-gcov/test/testProg_coverage ./testProg_coverage
   - docker container rm glshaderpp_test_container
 docker-deploy:
