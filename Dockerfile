@@ -46,18 +46,18 @@ RUN mkdir build-gcov && cd build-gcov && cmake .. -D CMAKE_BUILD_TYPE=Debug -D B
     && cmake --build . \
     && cd ..
 
-#FROM ubuntu:latest as tester
+FROM ubuntu:latest as tester
 
-#COPY --from=builder /home/conan/glshaderPP /home/conan/glshaderPP
-#COPY --from=builder /home/conan/.conan /root/.conan
-#WORKDIR /home/conan/glshaderPP
+COPY --from=builder /home/conan/glshaderPP /home/conan/glshaderPP
+COPY --from=builder /home/conan/.conan /root/.conan
+WORKDIR /home/conan/glshaderPP
 
-#RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
-#                                         libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
-#                                         libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
-#                                         libxcb-xinerama0 libglu1-mesa gcovr && \
-#    wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0-linux-x86_64.sh && \
-#    chmod +x cmake.sh && ./cmake.sh --skip-license && \
-#    apt-get clean && rm cmake.sh
+RUN apt-get update && apt-get install -y wget xvfb libxcomposite1 libxcursor1 libxdamage1 libxft2 libxi6 libxinerama1 \
+                                         libxrandr2 libxres1 libxss1 libxtst6 libxv1 libxvmc1 libxcb-xkb1 libxcb-icccm4 \
+                                         libxcb-image0 libxcb-keysyms1 libxcb-render0 libxcb-render-util0 libxcb-shape0 \
+                                         libxcb-xinerama0 libglu1-mesa gcovr && \
+    wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0-linux-x86_64.sh && \
+    chmod +x cmake.sh && ./cmake.sh --skip-license && \
+    apt-get clean && rm cmake.sh
 
 ENV DISPLAY :0
