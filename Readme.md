@@ -1,6 +1,6 @@
 # GLShaderPP Readme
 
-[![Build Status](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/badges/master/pipeline.svg?ignore_skipped=true)](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/pipelines)
+[![Build Status](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/badges/master/pipeline.svg?ignore_skipped=true)](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/pipelines) [![Test coverage](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/badges/master/coverage.svg)](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/jobs/artifacts/master/download?job=docker-test) [![Latest release](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/badges/release.svg)](https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/releases)
 
 GLShaderPP is a lightweight C++ library that simplifies GLSL shader management (compiling and linking) in OpenGL application.
 
@@ -70,6 +70,7 @@ If something goes wrong during all these underlying steps, you will be warned. S
 If you want to keep control of what and when it's done, you may create empty objects and load, compile and link later. So you have to create your `GLShaderPP::CShader` objects and call their `GLShaderPP::CShader::LoadSource()` and `GLShaderPP::CShader::Compile()` member functions. When your shader are ready, you have to create a `GLShaderPP::CShaderProgram` object and call its `GLShaderPP::CShaderProgram::AttachShader()` for each shader then call its `GLShaderPP::CShaderProgram::Link()` member function.
 
 The following example shows all these steps:
+
 ``` cpp
   GLShaderPP::CShader vertexShader{ GL_VERTEX_SHADER };
   vertexShader.LoadSource(std::ifstream{ "vertex.vert" });
@@ -107,24 +108,86 @@ GLShaderPP is a header only library. There is no need to build it to use it. How
 
 #### Using conan
 
+You can use conan from conan center repository to automatically install GLShaderPP. Just add `glshaderpp/1.0.0` to the `[requires]` section of your `conanfile.txt`. (You may adjust GLShaderPP release version.)
+
 #### Download release from gitlab-lepuy.iut.uca.fr
+
+Go to https://gitlab-lepuy.iut.uca.fr/opengl/glshaderpp/-/releases to download a specific release.
 
 #### Automatic installation from sources
 
+You can automatically install GLShaderPP by using cmake. Suppose that `$SRC_DIR` is the GLShaderPP source directory, `$BUILD_DIR` is a temporary building directory, `$INSTALL_DIR` is the place where you want to install GLShaderPP, your installation script is:
+
+``` sh
+# Creates temporary $BUILD_DIR:
+mkdir $BUILD_DIR
+# Configures cmake build:
+cmake -S $SRC_DIR -B $BUILD_DIR
+# Installs GLShaderPP:
+cmake --install . --prefix=$INSTALL_DIR
+# You can now remove $BUILD_DIR:
+rm -r $BUILD_DIR
+```
+
 #### Manual installation from sources
 
-You just have to take the GLShaderPP/public directory and add it to your project. 
+You just have to take the `GLShaderPP/public` directory and add it to your project.
 
 ### Building and running tests
 
 #### Prerequisites for compiling tests
 
+You'll need:
+
+- _Mandatory_ [cmake](https://cmake.org) version >= 3.16
+- _Mandatory_ [conan](https://conan.io/) version >= 1.48
+
 #### Compiling and running tests
+
+Suppose that `$SRC_DIR` is the GLShaderPP source directory, `$BUILD_DIR` is the building directory, your building script is:
+
+```sh
+# Creates $BUILD_DIR:
+mkdir $BUILD_DIR
+cd $BUILD_DIR
+# Configures cmake build:
+cmake $SRC_DIR -D CMAKE_BUILD_TYPE=Release -D BUILD_TESTING=On
+# Builds it:
+cmake --build . --config Release
+# Running tests:
+ctest -C Release
+```
+
+_Note:_ If you use GCC compiler and compile in Debug mode, you may analyse test coverage using gcov tooling.
+
+_Note:_ If built, the test program `testProg` is installed with GLShaderPP by `cmake --install . --prefix=$INSTALL_DIR`
 
 ### Building documentation
 
 #### Prerequisites for making documentation
 
+You'll need:
+
+- _Mandatory_ [cmake](https://cmake.org) version >= 3.16
+- _Mandatory_ [doxygen](https://doxygen.org) recent version
+- _Mandatory_ [graphviz](https://graphviz.org) recent version
+
 #### Making documentation
 
+Suppose that `$SRC_DIR` is the GLShaderPP source directory, `$BUILD_DIR` is the building directory, your building script is:
+
+```sh
+# Creates $BUILD_DIR:
+mkdir $BUILD_DIR
+cd $BUILD_DIR
+# Configures cmake build:
+cmake $SRC_DIR -D BUILD_DOCUMENTATION=On
+# Builds it:
+cmake --build .
+```
+
+_Note:_ If built, documentation is installed with GLShaderPP by `cmake --install . --prefix=$INSTALL_DIR`
+
 #### Reading documentation
+
+Just open `$BUILD_DIR/GLShaderPP/html/index.html` in your web browser.
