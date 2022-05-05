@@ -8,6 +8,9 @@
 variables:
   GIT_SSL_NO_VERIFY: '1'
   GIT_SUBMODULE_STRATEGY: recursive
+workflow:
+  rules:
+  - if: $CI_COMMIT_BRANCH
 stages:
 - build
 - test
@@ -65,9 +68,8 @@ docker-build:
   - docker container rm glshaderpp_container
   - docker push "$CI_REGISTRY_IMAGE${tag}"
   rules:
-  - if: "$CI_COMMIT_BRANCH"
-    exists:
-    - Dockerfile
+    - exists:
+      - Dockerfile
 docker-test:
   image: docker:latest
   variables:
